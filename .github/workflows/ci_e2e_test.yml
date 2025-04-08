@@ -1,0 +1,23 @@
+name: E2E Test # E2E Test 원할시 e2e yml 변경
+
+on:
+  pull_request:
+    branches:
+      - 'dump' # 간단한 CI를 원한다면 dump를 develop으로 변경 후 사용
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  E2E-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create applicaton.yml file
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/main/resources/application.yml
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean build e2eTest
