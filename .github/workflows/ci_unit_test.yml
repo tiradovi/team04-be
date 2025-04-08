@@ -1,0 +1,24 @@
+name: Unit Test
+
+on:
+  pull_request:
+    branches:
+      # 간단한 CI를 원한다면 dump를 develop으로 변경 후 사용
+      - 'dump'
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create applicaton.yml file
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/main/resources/application.yml
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean build test
