@@ -1,45 +1,39 @@
 name: Development Deploy
-
 on:
   pull_request:
     types: [closed]
     branches:
       - 'develop'
-
 env:
   APP_ENV: development
-
 permissions:
   id-token: write
   contents: read
-
 jobs:
   deploy:
     if: ${{ github.event.pull_request.merged && !contains(github.event.pull_request.labels.*.name, 'Skip:CD') }}
     name: Deploy
     runs-on: ubuntu-22.04
     environment: development
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Create applicaton.yml file
         run: |
           mkdir -p src/main/resources
           echo "${{ secrets.APPLICATION_YML_DEV }}" > src/main/resources/application.yml
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-
+      - name: Save short SHA
+        id: short-sha
+        run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
@@ -48,6 +42,30 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           DOCKER_TAG: ${{ env.APP_ENV }}
         run: |
-          docker build -f Dockerfile -t $ECR_REGISTRY/${{ env.ECR_REPO }}:$IMAGE_TAG -t $ECR_REGISTRY/${{ env.ECR_REPO }}:$DOCKER_TAG .
+          docker build -f Dockerfile -t $ECR_REGISTRY/${{ env.ECR_REPO }}:$IMAGE_TAG \
+            -t $ECR_REGISTRY/${{ env.ECR_REPO }}:$DOCKER_TAG \
+            -t $ECR_REGISTRY/${{ env.ECR_REPO }}:sha-${{ env.SHORT_SHA }} .
           docker push $ECR_REGISTRY/${{ env.ECR_REPO }}:$IMAGE_TAG
           docker push $ECR_REGISTRY/${{ env.ECR_REPO }}:$DOCKER_TAG
+          docker push $ECR_REGISTRY/${{ env.ECR_REPO }}:sha-${{ env.SHORT_SHA }}
+      # Infra 저장소 업데이트 단계 추가
+      - name: Checkout infrastructure repository
+        uses: actions/checkout@v3
+        with:
+          repository: TP1-OuterMSA/msa-infra
+          path: msa-infra
+          token: ${{ secrets.GH_PAT }}
+      - name: Update image tag in Helm chart
+        run: |
+          cd msa-infra/charts/services/${{ secrets.APP_NAME }}
+          sed -i "s/tag: \".*\"/tag: \"sha-${{ env.SHORT_SHA }}\"/g" values.yaml
+          echo "Updated values.yaml content:"
+          cat values.yaml
+      - name: Commit and push changes to infrastructure repo
+        run: |
+          cd msa-infra
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Update ${{ secrets.APP_NAME }} image tag to sha-${{ env.SHORT_SHA }}"
+          git push || echo "No changes to push"
