@@ -69,3 +69,41 @@ jobs:
           git add .
           git diff-index --quiet HEAD || git commit -m "Update ${{ secrets.APP_NAME }} image tag to sha-${{ env.SHORT_SHA }}"
           git push || echo "No changes to push"
+      # 아티팩트 저장 단계 -> 태그가 변경되었을 때만 수행함
+      - name: Archive deployment artifacts
+        if: env.TAG_CHANGED == 'true'
+        run: |
+          DEPLOY_ID=$(date +'%Y%m%d%H%M%S')-${{ env.SHORT_SHA }}
+
+          mkdir -p deployment-artifacts
+
+          cp -r msa-infra/charts/services/${{ secrets.APP_NAME }} deployment-artifacts/
+
+          cat > deployment-artifacts/metadata.json << EOF
+          {
+            "service": "${{ secrets.APP_NAME }}",
+            "environment": "${{ env.APP_ENV }}",
+            "deployId": "${DEPLOY_ID}",
+            "imageTag": "sha-${{ env.SHORT_SHA }}",
+            "previousImageTag": "${{ env.OLD_TAG }}",
+            "commitSHA": "${{ github.sha }}",
+            "commitMessage": "$(git log -1 --pretty=%B | sed 's/"/\\"/g')",
+            "prNumber": "${{ github.event.pull_request.number }}",
+            "prTitle": "${{ github.event.pull_request.title }}",
+            "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+            "githubRunUrl": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+          EOF
+
+          cd deployment-artifacts
+          tar -czf ../${DEPLOY_ID}.tar.gz .
+          cd ..
+
+          aws s3 cp ${DEPLOY_ID}.tar.gz s3://${{ secrets.S3_ARTIFACTS_BUCKET }}/${{ secrets.APP_NAME }}/${{ env.APP_ENV }}/${DEPLOY_ID}/deployment.tar.gz
+
+          aws s3 cp deployment-artifacts/metadata.json s3://${{ secrets.S3_ARTIFACTS_BUCKET }}/${{ secrets.APP_NAME }}/${{ env.APP_ENV }}/${DEPLOY_ID}/metadata.json
+
+          echo ${DEPLOY_ID} > latest.txt
+          aws s3 cp latest.txt s3://${{ secrets.S3_ARTIFACTS_BUCKET }}/${{ secrets.APP_NAME }}/${{ env.APP_ENV }}/latest.txt
+          
+          echo "배포 아티팩트가 S3에 성공적으로 저장되었습니다. 배포 ID: ${DEPLOY_ID}"
