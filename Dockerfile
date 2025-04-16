@@ -20,4 +20,5 @@ EXPOSE 8080
 
 ENV TZ Asia/Seoul
 
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+# ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar", "--spring.config.location=file:/vault/secrets/application.yml"]
