@@ -1,4 +1,4 @@
-package com.example.webscraper.config;
+package com.example.crawler.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -13,7 +13,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("MJ API")
-                        .description("명지대학교 학생")
+                        .description("명지대학교 학생식당 크롤링")
                         .version("1.0.0")
                 );
     }

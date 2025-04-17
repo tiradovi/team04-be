@@ -1,4 +1,4 @@
-package com.example.webscraper;
+package com.example.crawler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class WebScraperApplication {
+public class WebCrawlerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(WebScraperApplication.class, args);
+        SpringApplication.run(WebCrawlerApplication.class, args);
     }
 }

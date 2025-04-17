@@ -1,0 +1,6 @@
+[submodule "src/main/avro-schemas"]
+	path = src/main/avro-schemas
+	url = https://github.com/Team-Project-MSA-InnerArchitecture/kafka-registry.git
+[submodule "src/main/avro"]
+	path = src/main/avro
+	url = https://github.com/Team-Project-MSA-InnerArchitecture/avro.git

@@ -1,7 +1,7 @@
-package com.example.webscraper.meal.controller;
+package com.example.crawler.meal.controller;
 
-import com.example.webscraper.meal.entity.MealItem;
-import com.example.webscraper.meal.service.MealItemService;
+import com.example.crawler.meal.entity.MealItem;
+import com.example.crawler.meal.service.MealItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

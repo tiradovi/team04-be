@@ -1,4 +1,4 @@
-package com.example.webscraper.config;
+package com.example.crawler.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
