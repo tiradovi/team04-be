@@ -3,8 +3,7 @@ name: Unit Test
 on:
   pull_request:
     branches:
-      # 간단한 CI를 원한다면 dump를 develop으로 변경 후 사용
-      - 'dump'
+      - 'develop'
     types: [ opened, synchronize, reopened ]
 
 jobs:
@@ -14,11 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
       - name: Create applicaton.yml file
         run: |
           mkdir -p src/main/resources
           echo "${{ secrets.APPLICATION_YML_TEST }}" > src/main/resources/application.yml
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle
-        run: |
-          ./gradlew clean build test
+        run: ./gradlew clean build test --no-daemon
