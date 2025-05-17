@@ -18,7 +18,7 @@ public class MealMenuController {
 
     private final MenuService menuService;
 
-    @GetMapping("/menus")
+    @GetMapping("/items")
     public ResponseEntity<List<MenuResponseDto>> getMenuItems(
         @RequestParam(defaultValue = "false") boolean onlyThisWeek) {
         return ResponseEntity.ok(menuService.getMenuItems(onlyThisWeek));

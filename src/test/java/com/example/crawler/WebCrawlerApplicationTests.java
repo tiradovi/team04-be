@@ -1,6 +1,6 @@
-package com.mjumeal;
+package com.example.crawler;
 
-import com.example.crawler.WebCrawlerApplication;
+
 import com.example.crawler.meal.component.MenuMapper;
 import com.example.crawler.meal.dto.MealMenuResponseDto;
 import com.example.crawler.meal.dto.MenuResponseDto;
