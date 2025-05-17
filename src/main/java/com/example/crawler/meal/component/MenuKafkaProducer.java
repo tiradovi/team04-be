@@ -1,7 +1,7 @@
 package com.example.crawler.meal.component;
 
-
-import com.example.crawler.meal.entity.MealItem;
+import com.example.crawler.meal.entity.Menu;
+import com.example.kafka_schemas.MealEvent;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,10 @@ public class MenuKafkaProducer {
 
   private final KafkaTemplate<String, MealEvent> kafkaTemplate;
 
-  public void sendAllMealItems(List<MealItem> items) {
+  public void sendAllMealItems(List<Menu> menus) {
     try {
-      for (MealItem item : items) {
-        MealEvent mealEvent = createMealEventFromItem(item);
+      for (Menu menu : menus) {
+        MealEvent mealEvent = createMealEvent(menu);
         ProducerRecord<String, MealEvent> producerRecord = new ProducerRecord<>(
             "meal.web.crawler.updated", "meal.data", mealEvent);
         kafkaTemplate.send(producerRecord);
@@ -30,7 +30,7 @@ public class MenuKafkaProducer {
     }
   }
 
-  private MealEvent createMealEventFromItem(MealItem item) {
-    return new MealEvent(item.getMealType(), item.getMenuContent(), item.getDay().toString());
+  private MealEvent createMealEvent(Menu menu) {
+    return new MealEvent(menu.getMealType(), menu.getMenuContent(), menu.getDate().toString());
   }
 }

@@ -1,4 +1,4 @@
-package com.example.crawler.meal.component;
+package com.example.crawler.meal.component.crawling;
 
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class MealTableHtmlFetcher {
+public class MealMenuHtmlFetcher {
 
   private static final String USER_AGENT = "Mozilla/5.0";
 

@@ -32,19 +32,17 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.jsoup:jsoup:1.15.4'
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
     implementation 'org.apache.avro:avro:1.11.4'
     implementation 'io.confluent:kafka-avro-serializer:7.6.0'
 
-    // monitoring
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
