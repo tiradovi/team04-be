@@ -1,4 +1,4 @@
-package com.example.crawler.event.component;
+package com.example.crawler.event.service;
 
 import com.example.crawler.event.entity.Event;
 import com.example.crawler.event.repository.EventRepository;
@@ -8,17 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
-public class EventSaver {
+public class EventSaveService {
 
   private final EventRepository eventRepository;
 
-  public List<Event> saveEvents(List<Event> events) {
-    List<Event> newEvents = new ArrayList<>();
-
+  public void saveEvents(List<Event> events) {
     for (Event event : events) {
       try {
         boolean exists = eventRepository.findByTitleAndDate(
@@ -31,13 +30,12 @@ public class EventSaver {
         }
 
         eventRepository.save(event);
-        newEvents.add(event);
+
         log.info("이벤트 저장 완료: {}", event.getTitle());
       } catch (Exception e) {
         log.error("이벤트 저장 중 오류 발생: {}", event.getTitle(), e);
       }
     }
 
-    return newEvents;
   }
 }

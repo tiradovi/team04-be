@@ -1,8 +1,8 @@
 package com.example.crawler.event.service;
 
-import com.example.crawler.event.component.EventExtractor;
-import com.example.crawler.event.component.EventHtmlFetcher;
-import com.example.crawler.event.component.EventParser;
+import com.example.crawler.event.component.crawling.EventExtractor;
+import com.example.crawler.event.component.crawling.EventHtmlFetcher;
+import com.example.crawler.event.component.crawling.EventParser;
 import com.example.crawler.event.entity.Event;
 import java.io.IOException;
 import java.util.ArrayList;

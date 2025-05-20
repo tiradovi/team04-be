@@ -56,9 +56,14 @@ public class MealMenuFormatter {
     String content = TITLE_PREFIX_PATTERN.matcher(rawContent.trim()).replaceFirst("");
 
     return content
+        .replaceAll("\\s*후식\\s*:\\s*", " ")
         .replaceAll(UNIT_REGEX, "")
         .replaceAll(EMOJI_REGEX, "")
-        .replaceAll(COMMON_REGEX, "")
+        .replaceAll(COMMON_REGEX.replace("&", ""), "")
+        .replaceAll("&", " ")
+        .replaceAll("[A-Za-z]", "")
+        .replaceAll("\\d", "")
+        .replaceAll("\\s+", " ")
         .trim();
   }
 
@@ -66,6 +71,14 @@ public class MealMenuFormatter {
     return rawTitle
         .replaceAll(EMOJI_REGEX, "")
         .replaceAll(COMMON_REGEX, "")
+        .replaceAll("[\\[\\]]", "")
+        .replaceAll("day", "")
+        .replaceAll("신메뉴.*", "신메뉴")
+        .replaceAll("일품.*", "일품메뉴")
+        .replaceAll("분식.*", "분식메뉴")
+        .replaceAll("블랙.*", "이벤트메뉴")
+        .replaceAll("계절.*", "계절메뉴")
+        .replaceAll("누들.*", "누들")
         .trim();
   }
   public String extractTitleFromContent(String rawContent) {
@@ -75,5 +88,4 @@ public class MealMenuFormatter {
     }
     return "";
   }
-
 }

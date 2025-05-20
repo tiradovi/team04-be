@@ -1,4 +1,4 @@
-package com.example.crawler.event.component;
+package com.example.crawler.event.component.crawling;
 
 import com.example.crawler.event.entity.Event;
 import java.time.format.DateTimeFormatter;

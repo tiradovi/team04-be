@@ -1,4 +1,4 @@
-package com.example.crawler.event.component;
+package com.example.crawler.event.component.kafka;
 
 import com.example.crawler.event.entity.Event;
 import com.example.kafka_schemas.EventMenu;

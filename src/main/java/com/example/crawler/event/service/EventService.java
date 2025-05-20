@@ -1,11 +1,11 @@
 package com.example.crawler.event.service;
 
-import com.example.crawler.event.component.EventKafkaProducer;
+import com.example.crawler.event.component.kafka.EventKafkaProducer;
 import com.example.crawler.event.component.EventMapper;
-import com.example.crawler.event.component.EventSaver;
 import com.example.crawler.event.dto.EventResponseDto;
 import com.example.crawler.event.entity.Event;
 import jakarta.annotation.PostConstruct;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class EventService {
 
   private final EventCrawlerService eventCrawlerService;
   private final EventMapper eventMapper;
-  private final EventSaver eventSaver;
+  private final EventSaveService eventSaveService;
   private final EventKafkaProducer eventKafkaProducer;
 
   @PostConstruct
@@ -30,11 +30,10 @@ public class EventService {
 
   public List<EventResponseDto> getEventItems() {
     List<Event> events = eventCrawlerService.crawlEvents();
-    List<Event> newEvents = eventSaver.saveEvents(events);
+    Collections.reverse(events);
+    eventSaveService.saveEvents(events);
 
-    if (!newEvents.isEmpty()) {
-      eventKafkaProducer.sendAllEventItems(newEvents);
-    }
+   // eventKafkaProducer.sendAllEventItems(events);
 
     return events.stream()
         .map(eventMapper::toDto)

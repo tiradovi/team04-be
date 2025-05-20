@@ -47,8 +47,12 @@ public class MealMenuParser {
       Element rawContent, Element rawExtra) {
     String mealType = formatter.formatMealType(rawMealType.text());
     String extractedTitle = formatter.extractTitleFromContent(rawContent.text());
-    String title =
-        !extractedTitle.isBlank() ? extractedTitle : formatter.formatMealTitle(rawTitle.text());
+    String titleRaw = !extractedTitle.isBlank()
+        ? extractedTitle
+        : formatter.formatMealTitle(rawTitle.text());
+
+    String title = formatter.formatMealTitle(titleRaw);
+
     String content = formatter.formatMenuContent(rawContent.text());
     String extra = rawExtra.text().trim();
     LocalDate date = formatter.formatDate(rawDay);

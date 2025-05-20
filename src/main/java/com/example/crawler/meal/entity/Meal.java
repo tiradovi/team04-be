@@ -33,6 +33,7 @@ public class Meal {
     @Column(nullable = false)
     private String mealName;
     private String mealCategory;
+    private String allergy;
 
     private Double calorie_kcal;
     private Double carb_g;

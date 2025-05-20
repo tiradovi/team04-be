@@ -1,8 +1,7 @@
 package com.example.crawler.meal.service;
 
-import com.example.crawler.meal.component.MenuKafkaProducer;
+import com.example.crawler.meal.component.kafka.MenuKafkaProducer;
 import com.example.crawler.meal.component.MenuMapper;
-import com.example.crawler.meal.component.db.MealMenuSaver;
 import com.example.crawler.meal.dto.MenuResponseDto;
 import com.example.crawler.meal.entity.Menu;
 
@@ -21,12 +20,12 @@ public class MenuService {
   private final MenuKafkaProducer menuKafkaProducer;
 
   private final MealMenuCrawlerService mealMenuCrawlerService;
-  private final MealMenuSaver mealMenuSaver;
+  private final MealMenuSaveService mealMenuSaveService;
   private final MenuMapper menuMapper;
 
-  public List<MenuResponseDto> getMenuItems(boolean onlyThisWeek) {
-    List<Menu> menuList = mealMenuCrawlerService.mealMenuCrawler(onlyThisWeek);
-    List<Menu> newMenus = mealMenuSaver.saveMenus(menuList);
+  public List<MenuResponseDto> getMenuItems() {
+    List<Menu> menuList = mealMenuCrawlerService.mealMenuCrawler();
+    List<Menu> newMenus = mealMenuSaveService.saveDB(menuList);
 
     if (!newMenus.isEmpty()) {
       // menuKafkaProducer.sendAllMealItems(newMenus);

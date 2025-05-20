@@ -1,4 +1,4 @@
-package com.example.crawler.event.component;
+package com.example.crawler.event.component.crawling;
 
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
