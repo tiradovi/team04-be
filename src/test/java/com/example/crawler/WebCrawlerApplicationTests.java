@@ -2,7 +2,6 @@ package com.example.crawler;
 
 
 import com.example.crawler.meal.component.MenuMapper;
-import com.example.crawler.meal.dto.MealMenuResponseDto;
 import com.example.crawler.meal.dto.MenuResponseDto;
 import com.example.crawler.meal.entity.MealMenu;
 import com.example.crawler.meal.entity.Meal;
@@ -51,10 +50,5 @@ class MenuMapperTest {
 		assertThat(dto.getMenuTitle()).isEqualTo("오늘의 메뉴");
 		assertThat(dto.getMenuContent()).isEqualTo("국/반찬/후식");
 		assertThat(dto.getExtraInfo()).isEqualTo("특이사항 없음");
-		assertThat(dto.getMealMenus()).hasSize(1);
-
-		MealMenuResponseDto mealMenuDto = dto.getMealMenus().get(0);
-		assertThat(mealMenuDto.getMealMenuId()).isEqualTo(1L);
-		assertThat(mealMenuDto.getMenuItem()).isEqualTo("김치찌개");
 	}
 }

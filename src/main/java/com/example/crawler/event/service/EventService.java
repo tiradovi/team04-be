@@ -33,7 +33,7 @@ public class EventService {
     Collections.reverse(events);
     eventSaveService.saveEvents(events);
 
-   // eventKafkaProducer.sendAllEventItems(events);
+    //eventKafkaProducer.sendAllEventItems(events);
 
     return events.stream()
         .map(eventMapper::toDto)

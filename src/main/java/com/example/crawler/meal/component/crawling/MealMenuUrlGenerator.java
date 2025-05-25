@@ -26,12 +26,12 @@ public class MealMenuUrlGenerator {
 
       urls.add(BASE_URL);
 
-//      for (int i = 0; i <= 5; i++) {
-//        LocalDate monday = thisMonday.minusWeeks(i);
-//        String url = createUrlWithDate(monday);
-//        urls.add(url);
-//
-//    }
+      for (int i = 0; i <= 5; i++) {
+        LocalDate monday = thisMonday.minusWeeks(i);
+        String url = createUrlWithDate(monday);
+        urls.add(url);
+
+    }
     return urls;
   }
 

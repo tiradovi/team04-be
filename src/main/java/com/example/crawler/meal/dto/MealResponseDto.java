@@ -6,10 +6,12 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MealResponseDto {
-    private Integer mealId;
-    private String mealName;
+    private String foodName;
     private String mealCategory;
-    private String nutrition;
-    private Integer calorie;
+    private Double calorie_kcal;
+    private Double carb_g;
+    private Double protein_g;
+    private Double fat_g;
+    private String foodWeight;
     private String allergy;
 }

@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MealMenuFormatter {
 
-  private static final String COMMON_REGEX = "[♥★♡☺&/()\\[\\],]|\\[.*?]|\\(.*?\\)";
-  private static final String EMOJI_REGEX = "[\\u2600-\\u26FF]|[\\uD83C-\\uDBFF\\uDC00-\\uDFFF]";
-  private static final String UNIT_REGEX = "\\d+/\\d+개|\\d+개|\\d+g|\\d+인분|\\d+잔|\\d+그릇";
-
+  private static final Pattern COMMON_PATTERN = Pattern.compile("[♥★♡☺/\\[\\],]|\\[[^\\]]{0,20}]|\\([^)]{0,20}\\)");
+  private static final Pattern EMOJI_PATTERN = Pattern.compile("[\\u2600-\\u26FF]|[\\uD83C\\uDF00-\\uD83D\\uDEFF]");
+  private static final Pattern UNIT_PATTERN = Pattern.compile("\\b\\d{1,3}/\\d{1,3}개|\\b\\d{1,3}(개|g|인분|잔|그릇)\\b");
   private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile(
-      "^(\\[.*?\\s*DAY.*?]|신메뉴\\S{0,10})\\s*",
+      "^(\\[.{0,20}?DAY.{0,10}?]|신메뉴\\S{0,10})\\s*",
       Pattern.CASE_INSENSITIVE
   );
+  private static final Pattern AFTER_DESSERT_PATTERN = Pattern.compile("\\s{0,5}후식\\s{0,5}:\\s{0,5}");
 
   public Integer formatMenuId(LocalDate date, String mealType) {
     int typeCode = switch (mealType) {
@@ -55,12 +55,11 @@ public class MealMenuFormatter {
   public String formatMenuContent(String rawContent) {
     String content = TITLE_PREFIX_PATTERN.matcher(rawContent.trim()).replaceFirst("");
 
-    return content
-        .replaceAll("\\s*후식\\s*:\\s*", " ")
-        .replaceAll(UNIT_REGEX, "")
-        .replaceAll(EMOJI_REGEX, "")
-        .replaceAll(COMMON_REGEX.replace("&", ""), "")
-        .replaceAll("&", " ")
+    return AFTER_DESSERT_PATTERN.matcher(content).replaceAll(" ")
+        .replaceAll(UNIT_PATTERN.pattern(), "")
+        .replaceAll(EMOJI_PATTERN.pattern(), "")
+        .replaceAll(COMMON_PATTERN.pattern(), "")
+        .replaceAll("&", " ") // 직접적으로 "&" 제거
         .replaceAll("[A-Za-z]", "")
         .replaceAll("\\d", "")
         .replaceAll("\\s+", " ")
@@ -69,10 +68,10 @@ public class MealMenuFormatter {
 
   public String formatMealTitle(String rawTitle) {
     return rawTitle
-        .replaceAll(EMOJI_REGEX, "")
-        .replaceAll(COMMON_REGEX, "")
+        .replaceAll(EMOJI_PATTERN.pattern(), "")
+        .replaceAll(COMMON_PATTERN.pattern(), "")
         .replaceAll("[\\[\\]]", "")
-        .replaceAll("day", "")
+        .replaceAll("(?i)day", "")
         .replaceAll("신메뉴.*", "신메뉴")
         .replaceAll("일품.*", "일품메뉴")
         .replaceAll("분식.*", "분식메뉴")
@@ -81,6 +80,7 @@ public class MealMenuFormatter {
         .replaceAll("누들.*", "누들")
         .trim();
   }
+
   public String extractTitleFromContent(String rawContent) {
     Matcher matcher = TITLE_PREFIX_PATTERN.matcher(rawContent);
     if (matcher.find()) {

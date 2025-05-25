@@ -48,7 +48,6 @@ public class SaveMeal {
     }
     return Arrays.stream(content.split("\\s+"))
         .map(String::trim)
-        .filter(name -> name.length() > 1)
         .distinct()
         .collect(Collectors.toList());
   }
