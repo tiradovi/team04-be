@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Builder
 public class MenuResponseDto {
     private Integer menuId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
@@ -18,4 +20,5 @@ public class MenuResponseDto {
     private String menuContent;
     private String extraInfo;
 
+    private List<MealSummaryDto> meals;  // 추가된 필드
 }

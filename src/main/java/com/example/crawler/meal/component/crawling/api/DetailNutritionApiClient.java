@@ -1,4 +1,4 @@
-package com.example.crawler.meal.component.crawling;
+package com.example.crawler.meal.component.crawling.api;
 
 import com.example.crawler.meal.dto.DetailNutritionRequestDto;
 import com.example.crawler.meal.dto.DetailNutritionResponseDto;
@@ -18,7 +18,7 @@ public class DetailNutritionApiClient {
     try {
       DetailNutritionRequestDto requestDto = new DetailNutritionRequestDto(foodName);
 
-      log.info("Requesting detail nutrition API with foodName: {}", foodName);
+      log.info("상세 영양 API 요청 시작: 음식명 = {}", foodName);
 
       DetailNutritionResponseDto response = WebClient.create()
           .post()
@@ -29,13 +29,13 @@ public class DetailNutritionApiClient {
           .block();
 
       if (response == null) {
-        log.warn("Empty response from detail nutrition API for food: {}", foodName);
+        log.warn("상세 영양 API에서 빈 응답이 반환되었습니다: 음식명 = {}", foodName);
       }
 
       return response;
 
     } catch (Exception e) {
-      log.error("Exception calling detail nutrition API for food: {}", foodName, e);
+      log.error("상세 영양 API 호출 중 예외 발생: 음식명 = {}", foodName, e);
       return null;
     }
   }

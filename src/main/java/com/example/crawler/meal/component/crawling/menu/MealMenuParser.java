@@ -1,4 +1,4 @@
-package com.example.crawler.meal.component.crawling;
+package com.example.crawler.meal.component.crawling.menu;
 
 import com.example.crawler.meal.entity.Menu;
 import java.time.LocalDate;

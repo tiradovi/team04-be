@@ -23,17 +23,12 @@ public class EventService {
   private final EventSaveService eventSaveService;
   private final EventKafkaProducer eventKafkaProducer;
 
-  @PostConstruct
-  public void init() {
-    getEventItems();
-  }
-
   public List<EventResponseDto> getEventItems() {
     List<Event> events = eventCrawlerService.crawlEvents();
     Collections.reverse(events);
     eventSaveService.saveEvents(events);
 
-    //eventKafkaProducer.sendAllEventItems(events);
+    eventKafkaProducer.sendAllEventItems(events);
 
     return events.stream()
         .map(eventMapper::toDto)

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import jakarta.annotation.PostConstruct;
 
 
 @Slf4j
@@ -15,8 +14,9 @@ public class MealScheduler {
 
   private final MenuService menuService;
 
-  @Scheduled(fixedRate = 360000)
+  @Scheduled(cron = "0 0 1 * * mon")
   public void scheduledMeal() {
     menuService.getMenuItems();
+    menuService.sendKafkaMessages();
   }
 }

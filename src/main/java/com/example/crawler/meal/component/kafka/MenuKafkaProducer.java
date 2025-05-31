@@ -16,9 +16,9 @@ public class MenuKafkaProducer {
 
   private final KafkaTemplate<String, MealEvent> kafkaTemplate;
 
-  public void sendAllMealItems(List<Menu> menus) {
+  public void sendAllMealItems(List<Menu> weekMenus) {
     try {
-      for (Menu menu : menus) {
+      for (Menu menu : weekMenus) {
         MealEvent mealEvent = createMealEvent(menu);
         ProducerRecord<String, MealEvent> producerRecord = new ProducerRecord<>(
             "meal.web.crawler.updated", "meal.data", mealEvent);
