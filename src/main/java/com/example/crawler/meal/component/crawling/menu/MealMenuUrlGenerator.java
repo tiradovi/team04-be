@@ -23,7 +23,7 @@ public class MealMenuUrlGenerator {
     urls.add(BASE_URL);
     if (!onlyThisWeek) {
       LocalDate today = LocalDate.now();
-      LocalDate thisMonday = today.minusDays(today.getDayOfWeek().getValue() - 1);
+      LocalDate thisMonday = today.minusDays(today.getDayOfWeek().getValue() - 1L);
       for (int i = 0; i <= 5; i++) {
         LocalDate monday = thisMonday.minusWeeks(i);
         urls.add(createUrlWithDate(monday));
