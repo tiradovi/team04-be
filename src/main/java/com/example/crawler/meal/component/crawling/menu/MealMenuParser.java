@@ -1,9 +1,10 @@
-package com.example.crawler.meal.component.crawling;
+package com.example.crawler.meal.component.crawling.menu;
 
 import com.example.crawler.meal.entity.Menu;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class MealMenuParser {
 
   private final MealMenuFormatter formatter;
-
+  private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}\\.\\d{2}\\s+[^()\\n]{0,50}\\([월화수목금]\\)");
   public List<Menu> parse(Element tableElement) {
     List<Menu> mealItems = new ArrayList<>();
     Elements rows = tableElement.select("tbody tr");
@@ -29,7 +30,7 @@ public class MealMenuParser {
       }
 
       String firstCell = cells.get(0).text().trim();
-      if (firstCell.matches("\\d{2}\\.\\d{2}.*\\([월화수목금]\\).*")) {
+      if (DATE_PATTERN.matcher(firstCell).matches()) {
         currentDay = firstCell;
         if (cells.size() >= 5) {
           mealItems.add(

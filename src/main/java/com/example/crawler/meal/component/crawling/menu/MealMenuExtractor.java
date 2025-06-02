@@ -1,4 +1,4 @@
-package com.example.crawler.meal.component.crawling;
+package com.example.crawler.meal.component.crawling.menu;
 
 import java.util.Objects;
 import org.jsoup.nodes.Document;

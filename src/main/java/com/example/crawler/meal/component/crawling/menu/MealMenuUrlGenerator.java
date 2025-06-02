@@ -1,5 +1,6 @@
-package com.example.crawler.meal.component.crawling;
+package com.example.crawler.meal.component.crawling.menu;
 
+import java.time.DayOfWeek;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -18,23 +19,23 @@ public class MealMenuUrlGenerator {
   private static final String BASE_URL = "https://www.mju.ac.kr/mjukr/8595/subview.do";
   private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
-  public List<String> generateUrls() {
+  public List<String> generateUrls(boolean onlyThisWeek) {
     List<String> urls = new ArrayList<>();
-    LocalDate today = LocalDate.now();
-    LocalDate thisMonday = today.minusDays(today.getDayOfWeek().getValue() - 1);
+    urls.add(BASE_URL);
+    if (!onlyThisWeek) {
+      LocalDate today = LocalDate.now();
+      if (today.getDayOfWeek() == DayOfWeek.SUNDAY) {
+        today = today.plusDays(today.getDayOfWeek().getValue() + 1L);
+      }
+      LocalDate thisMonday = today.minusDays(today.getDayOfWeek().getValue() - 1L);
 
-
-      urls.add(BASE_URL);
-
-//      for (int i = 0; i <= 5; i++) {
-//        LocalDate monday = thisMonday.minusWeeks(i);
-//        String url = createUrlWithDate(monday);
-//        urls.add(url);
-//
-//    }
+      for (int i = 0; i <= 8; i++) {
+        LocalDate monday = thisMonday.minusWeeks(i);
+        urls.add(createUrlWithDate(monday));
+      }
+    }
     return urls;
   }
-
 
   private String createUrlWithDate(LocalDate monday) {
     String formattedDate = monday.format(DATE_FORMATTER);

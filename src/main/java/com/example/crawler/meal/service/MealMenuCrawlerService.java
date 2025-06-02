@@ -1,9 +1,9 @@
 package com.example.crawler.meal.service;
 
-import com.example.crawler.meal.component.crawling.MealMenuExtractor;
-import com.example.crawler.meal.component.crawling.MealMenuHtmlFetcher;
-import com.example.crawler.meal.component.crawling.MealMenuParser;
-import com.example.crawler.meal.component.crawling.MealMenuUrlGenerator;
+import com.example.crawler.meal.component.crawling.menu.MealMenuExtractor;
+import com.example.crawler.meal.component.crawling.menu.MealMenuHtmlFetcher;
+import com.example.crawler.meal.component.crawling.menu.MealMenuParser;
+import com.example.crawler.meal.component.crawling.menu.MealMenuUrlGenerator;
 import com.example.crawler.meal.entity.Menu;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +26,9 @@ public class MealMenuCrawlerService {
   private final MealMenuUrlGenerator mealMenuUrlGenerator;
 
 
-  public List<Menu> mealMenuCrawler() {
+  public List<Menu> mealMenuCrawler(boolean onlyThisWeek) {
     List<Menu> totalMenuList = new ArrayList<>();
-    List<String> targetUrls = mealMenuUrlGenerator.generateUrls();
-
+    List<String> targetUrls = mealMenuUrlGenerator.generateUrls(onlyThisWeek);
     for (String url : targetUrls) {
       try {
         log.info("식단 크롤링 시작 - URL: {}", url);

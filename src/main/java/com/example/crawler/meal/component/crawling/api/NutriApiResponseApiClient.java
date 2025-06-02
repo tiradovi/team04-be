@@ -1,4 +1,4 @@
-package com.example.crawler.meal.component.crawling;
+package com.example.crawler.meal.component.crawling.api;
 
 import com.example.crawler.meal.dto.NutriApiResponseDto;
 import com.example.crawler.meal.dto.NutriApiResponseDto.Item;

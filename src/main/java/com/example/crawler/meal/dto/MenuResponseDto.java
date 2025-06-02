@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 public class MenuResponseDto {
     private Integer menuId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
 
@@ -18,5 +19,6 @@ public class MenuResponseDto {
     private String menuTitle;
     private String menuContent;
     private String extraInfo;
-    private List<MealMenuResponseDto> mealMenus;
+
+    private List<MealSummaryDto> meals;  // 추가된 필드
 }
