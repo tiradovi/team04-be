@@ -34,15 +34,38 @@ public class MealMenuFormatter {
   }
 
   public LocalDate formatDate(String rawDay) {
-    String[] dateParts = rawDay.split(" ")[0].split("\\.");
-    if (dateParts.length < 2) {
-      throw new IllegalArgumentException("날짜 형식이 잘못되었습니다: " + rawDay);
-    }
-    int month = Integer.parseInt(dateParts[0]);
-    int day = Integer.parseInt(dateParts[1]);
-    return LocalDate.of(LocalDate.now().getYear(), month, day);
-  }
+    try {
 
+      String cleanDay = rawDay.replaceAll("<[^>]*>", "").trim();
+
+
+      String[] parts = cleanDay.split("\\s+");
+      String datePart = parts[0]; // 첫 번째 부분이 날짜
+
+      String[] dateParts = datePart.split("\\.");
+      if (dateParts.length < 2) {
+        throw new IllegalArgumentException("날짜 형식이 잘못되었습니다: " + rawDay);
+      }
+
+      int month = Integer.parseInt(dateParts[0]);
+      int day = Integer.parseInt(dateParts[1]);
+
+      int currentYear = LocalDate.now().getYear();
+      int currentMonth = LocalDate.now().getMonthValue();
+
+      if (currentMonth - month > 6) {
+        currentYear++;
+      } else if (month - currentMonth > 6) {
+        currentYear--;
+      }
+
+      return LocalDate.of(currentYear, month, day);
+
+    } catch (Exception e) {
+
+      throw new IllegalArgumentException("날짜 형식이 잘못되었습니다: " + rawDay, e);
+    }
+  }
   public String formatMealType(String rawText) {
     return switch (rawText.trim()) {
       case "조식" -> "breakfast";
@@ -51,6 +74,47 @@ public class MealMenuFormatter {
       default -> "unknown";
     };
   }
+
+  public boolean isValidMenuContent(String content) {
+    if (content == null || content.trim().isEmpty()) {
+      return false;
+    }
+
+    String cleanContent = content.trim().toLowerCase();
+
+    String[] invalidPatterns = {
+        "천원의", "끝났습니다", "운영하지", "않습니다", "휴무", "중단",
+        "등록된", "없습니다", "문의", "공지", "알림"
+    };
+
+    for (String pattern : invalidPatterns) {
+      if (cleanContent.contains(pattern)) {
+        return false;
+      }
+    }
+
+    if (cleanContent.length() < 10) {
+      return false;
+    }
+
+    String[] foodKeywords = {
+        "밥", "국", "찌개", "볶음", "김치", "무침", "조림", "구이",
+        "탕", "전", "튀김", "샐러드", "빵", "우유", "죽", "면"
+    };
+
+    boolean hasValidFood = false;
+    for (String keyword : foodKeywords) {
+      if (cleanContent.contains(keyword)) {
+        hasValidFood = true;
+        break;
+      }
+    }
+
+    return hasValidFood;
+  }
+
+
+
 
   public String formatMenuContent(String rawContent) {
     String content = TITLE_PREFIX_PATTERN.matcher(rawContent.trim()).replaceFirst("");
@@ -62,6 +126,9 @@ public class MealMenuFormatter {
     content = content.replaceAll("[A-Za-z]", "");
     content = content.replaceAll("\\d", "");
     content = content.replaceAll("\\s+", " ");
+    if (!isValidMenuContent(rawContent)) {
+      return null;
+    }
     return content.trim();
   }
 
