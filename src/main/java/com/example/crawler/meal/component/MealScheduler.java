@@ -17,6 +17,6 @@ public class MealScheduler {
   @Scheduled(cron = "0 0 1 * * mon")
   public void scheduledMeal() {
     menuService.getMenuItems();
-    menuService.sendKafkaMessages();
+ //   menuService.sendKafkaMessages();
   }
 }
